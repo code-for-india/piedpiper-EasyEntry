@@ -1,6 +1,11 @@
 from flask import Flask,render_template
+<<<<<<< HEAD
 import pyqrcode,json
 from flask import jsonify, request
+=======
+import json
+from flask import jsonify
+>>>>>>> 86185c1839ecdd153cc108fa36069edf8fb1abd5
 import random,string
 from pymongo import MongoClient
 import pymongo
@@ -104,6 +109,7 @@ def booking():
 	monumentsCollection.insert_one(dbObject)
 	return jsonify(response), 200
 				
+
 if __name__ == '__main__':
     application.debug = True
     application.run(host = '0.0.0.0')

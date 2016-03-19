@@ -49,23 +49,6 @@ for path in image_paths:
 recognizer.train(images, numpy.array(labels))
 
 
-img = cv2.imread('test/test7.jpg')
-img =cv2.resize(img,(0,0),fx=0.2,fy=0.2)
-img= rotateImage(img,-90)
-cv2.imshow('load test',img)
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-faces = faceCascade.detectMultiScale(gray, 1.3, 5)
-print faces
-for (x, y, w, h) in faces:
-    cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-    roi_gray = gray[y:y+h, x:x+w]
-    roi_color = img[y:y+h, x:x+w]
-    predicted,conf=recognizer.predict(roi_gray)
-    print predicted,conf
-    cv2.imshow("Predicting...", img)
-cv2.waitKey(5000)
-cv2.destroyAllWindows()
-
 
 
 # # paths=open('faces.csv')
