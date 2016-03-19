@@ -69,7 +69,7 @@ def authenticate():
             data['authUrl']=monument['authUrl']
             data['twoFactor']=monument['twoFactor']
             data['params']=monument['params']
-            code=pyqrcode.create(json.dumps(data))
+            code=pyqrcode.crepipate(json.dumps(data))
             passcode=courseid+"_"+facid+"_.png"
             code.png(passcode,scale=10)
             return render_template("scan.html",image=passcode)
@@ -77,4 +77,4 @@ def authenticate():
         return str(e)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True,port=8080)
