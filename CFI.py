@@ -46,8 +46,13 @@ def monumentsList():
 	monumentCursor = monumentCollection.find()	
 	for monumentObject in monumentCursor:
 		entry = dict()
-		entry['photoURL'] =  		
-		monumentObject['id']	
+		entry['photoURL'] = monumentObject['photoURL']
+		entry['monumentName'] = monumentObject['monumentName']
+		entry['monumentId'] = monumentObject['monumentId']
+		response.append(monumentObject)
+	return jsonify(response), 200
+
+
 
 if __name__ == '__main__':
     application.debug = True
