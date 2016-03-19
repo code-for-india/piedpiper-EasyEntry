@@ -4,6 +4,7 @@ from flask import jsonify
 import random,string
 from pymongo import MongoClient
 import pymongo
+import random
 import requests
 
 application = Flask(__name__)
@@ -15,7 +16,7 @@ def login():
 	cfiClient = MongoClient()
 	#analyticsClient = MongoClient()
 	cfiDB = cfiClient['cfi']
-	userCollection  = reachDB['user']
+	userCollection  = cfiDB['user']
 	query = dict()
 	query['aadhaarID'] = aadhaarID	
 	userObject = userCollection.findOne(query)	
@@ -42,13 +43,55 @@ def monumentsList():
 	cfiClient = MongoClient()
 	#analyticsClient = MongoClient()
 	cfiDB = cfiClient['cfi']
-	monumentCollection  = reachDB['monuments']
+	monumentCollection  = cfiDB['monuments']
 	monumentCursor = monumentCollection.find()	
 	for monumentObject in monumentCursor:
 		entry = dict()
-		entry['photoURL'] =  		
-		monumentObject['id']	
+		entry['photo'] = monumentObject['photoURL']
+		entry['name'] = monumentObject['monumentName']
+		entry['id'] = monumentObject['monumentId']
+		response.append(monumentObject)
+	return jsonify(response), 200
 
+@application.route('/booking',methods=['POST'])
+def booking():
+	dbObject = dict()
+	dbObject['userID'] = request.json['userId']
+	visitorList = list()
+	visitors = request.json['visitors']	
+	response = dict() 
+	cfiClient = MongoClient()
+	#analyticsClient = MongoClient()
+	cfiDB = cfiClient['cfi']
+	userCollection  = cfiDB['user']
+	responseList = list()	
+	dbList = list()
+	for entry in visitors :
+		userId = entry['id']	
+		query = dict()
+		query["aadhaarID"] = userID
+		userObject = userCollection.findOne(query)		
+		responseEntry = dict()		
+		dbEntry = dict()		
+		if not userID :
+			responseEntry[userID] = "false"
+		else :
+			if entry['userName'] == userObject['userName']:
+				responseEntry[userID] = "true"
+				dbEntry['userID'] = userID
+				dbEntry['userName'] = entry['userName']
+				dbList.append(dbEntry)
+			else :
+				responseEntry[userID] = "false"
+		responseList.append(responseEntry)
+	dbObject['visitors'] = responseList
+	response['status'] = responseList
+	ticketID = 'GOV - ' + str(random.getrandbits(8))	
+	response['ticketID'] = ticketID	
+	QRcodebase64string = callFunction(ticketID)
+	response['QRcode'] = QRcodebase64string
+	return jsonify(response), 200
+				
 if __name__ == '__main__':
     application.debug = True
     application.run(host = '0.0.0.0')
