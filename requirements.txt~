@@ -1,0 +1,12 @@
+Flask==0.10.1
+requests==2.8.1
+Werkzeug==0.8.3
+gunicorn==0.17.2
+lxml==3.5.0
+pymongo==3.2
+PyOpenSSL
+cryptography
+time
+os
+base64
+json
