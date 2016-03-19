@@ -10,3 +10,4 @@ time
 os
 base64
 json
+pyqrcode
