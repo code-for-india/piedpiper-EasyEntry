@@ -1,5 +1,5 @@
 from flask import Flask,render_template
-import pyqrcode,json
+import json
 from flask import jsonify
 import random,string
 from pymongo import MongoClient
@@ -92,6 +92,7 @@ def booking():
 	response['QRcode'] = QRcodebase64string
 	return jsonify(response), 200
 				
+
 if __name__ == '__main__':
     application.debug = True
     application.run(host = '0.0.0.0')
