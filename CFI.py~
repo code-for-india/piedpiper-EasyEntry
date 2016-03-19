@@ -1,6 +1,6 @@
 from flask import Flask,render_template
 import pyqrcode,json
-from flask import jsonify
+from flask import jsonify, request
 import random,string
 from pymongo import MongoClient
 import pymongo
@@ -19,7 +19,7 @@ def login():
 	userCollection  = cfiDB['user']
 	query = dict()
 	query['aadhaarID'] = aadhaarID	
-	userObject = userCollection.findOne(query)	
+	userObject = userCollection.find_one(query)	
 	if not userObject :
 		response = dict()
 		response['status'] = "User Not found"
@@ -70,7 +70,7 @@ def booking():
 		userId = entry['id']	
 		query = dict()
 		query["aadhaarID"] = userID
-		userObject = userCollection.findOne(query)		
+		userObject = userCollection.find_one(query)		
 		responseEntry = dict()		
 		dbEntry = dict()		
 		if not userID :
@@ -86,10 +86,22 @@ def booking():
 		responseList.append(responseEntry)
 	dbObject['visitors'] = responseList
 	response['status'] = responseList
-	ticketID = 'GOV - ' + str(random.getrandbits(8))	
+	ticketID = 'GOV - ' + str(random.getrandbits(6))	
 	response['ticketID'] = ticketID	
+	dbObject['ticketID'] = ticketID	
+	#query = dict()
+	#query['aadhaarID'] = request.json['userId']
+	#userObject = userCollection.findOne(query)
+	#label = 	
 	QRcodebase64string = callFunction(ticketID)
 	response['QRcode'] = QRcodebase64string
+	dbObject['QRcode'] = QRcodebase64string
+	cfiClient = MongoClient()
+	#analyticsClient = MongoClient()
+	cfiDB = cfiClient['cfi']
+	dbObject['monumentName'] = request.json['monumentName']
+	monumentCollection  = cfiDB['tickets']
+	monumentsCollection.insert_one(dbObject)
 	return jsonify(response), 200
 				
 if __name__ == '__main__':
